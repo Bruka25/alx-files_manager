@@ -2,7 +2,7 @@ import { createClient } from 'redis';
 import { promisify } from 'util';
 
 class RedisClient {
-  constructor () {
+  constructor() {
     this.client = createClient();
 
     this.client.on('error', (err) => console.log('Redis client error:', err));
@@ -13,24 +13,24 @@ class RedisClient {
   }
 
   // isAlive method checks if the client is connected
-  isAlive () {
+  isAlive() {
     return this.client.connected;
   }
 
   // Asynchronous get method using the promisified version of client.get
-  async get (key) {
+  async get(key) {
     const value = await this.getAsync(key);
     return value;
   }
 
   // Asynchronous set method using the promisified version of client.setEx
-  async set (key, value, duration) {
+  async set(key, value, duration) {
     const res = await this.setExAsync(key, value, 'EX', duration);
     return res;
   }
 
   // Asynchronous del method using the promisified version of client.del
-  async del (key) {
+  async del(key) {
     const result = await this.delAsync(key);
     return result;
   }
