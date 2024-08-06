@@ -44,7 +44,7 @@ class UsersController {
       await dbClient.client.db().collection('users').insertOne(newUser);
 
       // Respond with the new user's email and id
-      return res.status(201).json({ id: newUser._id, email: newUser.email});
+      return res.status(201).json({ id: newUser._id, email: newUser.email });
     } catch (err) {
       return next(err);
     }
