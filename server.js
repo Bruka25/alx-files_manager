@@ -1,10 +1,8 @@
-import bodyParser from 'body-parser';
-
 const express = require('express');
 
 const app = express();
-app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: true }));
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
 // Load routes from the routes/index.js file
 const routes = require('./routes/index');
 
