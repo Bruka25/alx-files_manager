@@ -37,7 +37,7 @@ class UsersController {
       const newUser = {
         email,
         password: sha1Password,
-        _id: uuidv4() // Generate a new unique ID for the user
+        _id: uuidv4(), // Generate a new unique ID for the user
       };
 
       // Save the new user to the database
