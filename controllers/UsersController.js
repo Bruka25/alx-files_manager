@@ -1,6 +1,7 @@
 import { v4 as uuidv4 } from 'uuid';
 import crypto from 'crypto';
 import dbClient from '../utils/db';
+import redisClient from '../utils/redis';
 
 /**
  * UsersController class to handle user-related operations
@@ -47,6 +48,40 @@ class UsersController {
       return res.status(201).json({ id: newUser._id, email: newUser.email });
     } catch (err) {
       return next(err);
+    }
+  }
+
+  /**
+   * GET /users/me
+   * Retrieve the user based on the token
+   */
+  static async getMe(req, res) {
+    const token = req.headers['x-token'];
+
+    if (!token) {
+      return res.status(401).json({ error: 'Unauthorized' });
+    }
+
+    const key = `auth_${token}`;
+    const userId = await redisClient.get(key);
+
+    if (!userId) {
+      return res.status(401).json({ error: 'Unauthorized' });
+    }
+
+    try {
+      const user = await dbClient.client.db().collection('users').findOne(
+        { _id: dbClient.getObjectID(userId) },
+        { projection: { email: 1 } },
+      );
+
+      if (!user) {
+        return res.status(401).json({ error: 'Unauthorized' });
+      }
+
+      return res.status(200).json({ id: user._id, email: user.email });
+    } catch (err) {
+      return res.status(500).json({ error: 'Internal Server Error' });
     }
   }
 }
