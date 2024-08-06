@@ -1,4 +1,5 @@
 const express = require('express');
+
 const app = express();
 
 // Load routes from the routes/index.js file
