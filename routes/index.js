@@ -1,15 +1,14 @@
 import { Router } from 'express';
-import AppController from '../controllers/AppController';
-import UsersController from '../controllers/UsersController';
-import AuthController from '../controllers/AuthController';
+import appRouter from './app_route';
+import authRouter from './auth_route';
+import usersRouter from './user_route';
+import filesRouter from './file_route';
 
-const route = Router();
-// Define the endpoints
-route.get('/status', AppController.getStatus);
-route.get('/stats', AppController.getStats);
-route.post('/users', UsersController.postNew);
-route.get('/connect', AuthController.getConnect);
-route.get('/disconnect', AuthController.getDisconnect);
-route.get('/users/me', UsersController.getMe);
+// App router
+const router = Router();
+router.use(appRouter);
+router.use(authRouter);
+router.use(usersRouter);
+router.use(filesRouter);
 
-module.exports = route;
+export default router;
