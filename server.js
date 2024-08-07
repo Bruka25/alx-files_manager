@@ -1,16 +1,28 @@
-const express = require('express');
+import express from 'express';
+import router from './routes/index';
+import unmatchedRouteHandler from './middleware/notmatched';
+import errorHandler from './middleware/err';
+import shutdown from './utils/shutdown';
 
+// Express server
 const app = express();
+const PORT = process.env.PORT || 5000;
+
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-// Load routes from the routes/index.js file
-const routes = require('./routes/index');
+app.use(router);
+app.use(unmatchedRouteHandler);
+app.use(errorHandler);
 
-// Use the routes in the Express app
-app.use('/', routes);
-
-// Listen on the specified port or default to 5000
-const port = process.env.PORT || 5000;
-app.listen(port, () => {
-  console.log(`Server listening on port ${port}`);
+const server = app.listen(PORT, () => {
+  // eslint-disable-next-line no-console
+  console.log(`Server running on port ${PORT}`);
 });
+
+// Graceful shutdown
+const handler = () => shutdown(server);
+process.on('SIGINT', handler);
+process.on('SIGTERM', handler);
+process.on('SIGQUIT', handler);
+
+export default app;
